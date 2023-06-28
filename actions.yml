@@ -1,0 +1,33 @@
+name: SendEmailAction
+
+description: Sends an email using Gmail
+
+inputs:
+  subject:
+    description: 'The subject of the email'
+    required: true
+  emailBody:
+    description: 'The body of the email'
+    required: true
+  recipient:
+    description: 'The recipient email address'
+    required: true
+  senderUsername:
+    description: 'The Gmail username of the sender'
+    required: true
+  senderPassword:
+    description: 'The Gmail password or app password of the sender'
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Create email file
+      run: |
+        echo "Subject: ${{ inputs.subject }}" > email.txt
+        echo "${{ inputs.emailBody }}" >> email.txt
+
+    - name: Send email notification
+      run: |
+        cat email.txt | curl --url 'smtps://smtp.gmail.com:465' --ssl-reqd --mail-from 'Deep vempati' --mail-rcpt '${{ inputs.recipient }}' --user 'phanideepchoudary888@gmail.com:kvinvwcnxthnfhhh' --upload-file -
